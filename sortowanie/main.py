@@ -148,7 +148,6 @@ def test_loop(list_len: int = 1000):
     #
     #     qsort(input_list, 0, len(input_list)-1)
 
-
     @time_it
     def heap_sort():
         def heapify(arr, n, i):
