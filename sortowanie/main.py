@@ -1,24 +1,27 @@
 import time
-from list_gen import gen
-
-new_list = gen(10000)
+from list_gen import intgen
 
 
 # Function to measure the time taken by a function to execute
 def time_it(func):
     def wrapper(*args, **kwargs):
+        global input_list, new_list, list_len
+        input_list = new_list.copy()
+        list_len = len(input_list)
         start = time.time()
         result = func(*args, **kwargs)
         end = time.time()
         print(f"{func.__name__} took {end - start:.6f} seconds to execute")
+        temp_list.append(end - start)
         return result
+
     return wrapper
 
 
 # Functions to measure performance
 @time_it
 def insertion_sort():
-    for i in range(1, len(input_list)):
+    for i in range(1, list_len):
         key = input_list[i]
         j = i - 1
         while j >= 0 and input_list[j] > key:
@@ -29,21 +32,13 @@ def insertion_sort():
 
 @time_it
 def selection_sort():
-    for j in range(len(input_list) - 1):
+    for j in range(list_len - 1):
         minimal = j
-        for i in range(j + 1, len(input_list)):
+        for i in range(j + 1, list_len):
             if input_list[i] < input_list[minimal]:
                 minimal = i
 
         input_list[j], input_list[minimal] = input_list[minimal], input_list[j]
-
-
-@time_it
-def bubble_sort():
-    for i in range(len(input_list)-1):
-        for j in range(len(input_list)-i-1):
-            if input_list[j] > input_list[j+1]:
-                input_list[j], input_list[j+1] = input_list[j+1], input_list[j]
 
 
 @time_it
@@ -105,22 +100,83 @@ def merge_sort():
             mergeSort(input_list, m + 1, r)
             merge(input_list, l, m, r)
 
-    mergeSort(input_list, 0, len(input_list)-1)
+    mergeSort(input_list, 0, list_len - 1)
 
 
 @time_it
-def build_in_sort():
-    input_list.sort()
+def heap_sort():
+    def heapify(arr, n, i):
+        largest = i  # Initialize largest as root
+        l = 2 * i + 1  # left = 2*i + 1
+        r = 2 * i + 2  # right = 2*i + 2
+
+        # See if left child of root exists and is
+        # greater than root
+
+        if l < n and arr[i] < arr[l]:
+            largest = l
+
+        # See if right child of root exists and is
+        # greater than root
+
+        if r < n and arr[largest] < arr[r]:
+            largest = r
+
+        # Change root, if needed
+
+        if largest != i:
+            (arr[i], arr[largest]) = (arr[largest], arr[i])  # swap
+
+            # Heapify the root.
+
+            heapify(arr, n, largest)
+
+    # The main function to sort an array of given size
+
+    def heapSort(arr):
+        n = len(arr)
+
+        # Build a maxheap.
+        # Since last parent will be at ((n//2)-1) we can start at that location.
+
+        for i in range(n // 2 - 1, -1, -1):
+            heapify(arr, n, i)
+
+        # One by one extract elements
+
+        for i in range(n - 1, 0, -1):
+            (arr[i], arr[0]) = (arr[0], arr[i])  # swap
+            heapify(arr, i, 0)
+
+    # Driver code to test above
+
+    heapSort(input_list)
 
 
 # # Call the functions
-input_list = new_list.copy()
-insertion_sort()
-input_list = new_list.copy()
-selection_sort()
-input_list = new_list.copy()
-bubble_sort()
-input_list = new_list.copy()
-merge_sort()
-input_list = new_list.copy()
-build_in_sort()
+result_list = [['Lp', 'IS', 'SS', 'HS', 'MS']]
+input_list = []
+new_list = []
+temp_list = []
+list_len = 0
+
+for i in range(100):
+    input_list_len = i * 5
+    new_list = intgen(input_list_len)
+    temp_list = [input_list_len]
+    insertion_sort()
+    selection_sort()
+    heap_sort()
+    merge_sort()
+    result_list.append(temp_list)
+
+with open("results.txt", "w") as f:
+    for line in result_list:
+        f.writelines(" ".join(list(map(str, line))) + "\n")
+
+# @time_it
+# def bubble_sort():
+#     for i in range(list_len-1):
+#         for j in range(list_len-i-1):
+#             if input_list[j] > input_list[j+1]:
+#                 input_list[j], input_list[j+1] = input_list[j+1], input_list[j]
