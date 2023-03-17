@@ -162,9 +162,11 @@ new_list = []
 output_list = [0]
 tested_list = []
 list_len = 0
-for i in range(1, 100):
+end = 100
+for i in range(1, end):
     input_list_len = i * 5
     generated_list = intgen(input_list_len)
+    print(f"\n{i}/{end-1}")
     new_list = [generated_list,
                 increasing(generated_list),
                 decreasing(generated_list),
@@ -174,6 +176,7 @@ for i in range(1, 100):
     for j in range(5):
         output_list = [input_list_len, list_gen_types[j]]
         tested_list = new_list[j]
+        print(f"\n{list_gen_types[j]}")
         insertion_sort()
         selection_sort()
         heap_sort()
