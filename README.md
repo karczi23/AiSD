@@ -1,0 +1,21 @@
+# AiSD Ex. 1
+
+This exercise compares different sorting algorithms and their behavior when used with various distributions.
+
+**Tested algorithms:**
+<ul>
+<li>Merge Sort</li>
+<li>Heap Sort</li>
+<li>Insertion Sort</li>
+<li>Selection Sort</li>
+<li>Quick Sort</li>
+</ul>
+
+For each of these algorithms we have generated random integer list that follows different distributions:
+<ul>
+<li>Random</li>
+<li>Ascending</li>
+<li>Descending</li>
+<li>Constant</li>
+<li>V-shaped (first half descending, second half ascending)</li>
+</ul>
