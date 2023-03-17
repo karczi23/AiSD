@@ -8,14 +8,12 @@ def time_it(func):
     def wrapper(*args, **kwargs):
         global input_list, new_list, list_len
         input_list = tested_list.copy()
-        input_list = new_list.copy()
         list_len = len(input_list)
         start = time.time()
         result = func(*args, **kwargs)
         end = time.time()
         print(f"{func.__name__} took {end - start:.6f} seconds to execute")
         output_list.append(end - start)
-        temp_list.append(end - start)
         return result
 
     return wrapper
@@ -181,23 +179,8 @@ for i in range(1, 100):
         heap_sort()
         merge_sort()
         result_list.append(output_list)
-        
-        
-result_list = [['Lp', 'IS', 'SS', 'HS', 'MS']]
-input_list = []
-new_list = []
-temp_list = []
-list_len = 0
 
-for i in range(100):
-    input_list_len = i * 5
-    new_list = intgen(input_list_len)
-    temp_list = [input_list_len]
-    insertion_sort()
-    selection_sort()
-    heap_sort()
-    merge_sort()
-    result_list.append(temp_list)
+
 with open("results.txt", "w") as f:
     for line in result_list:
         f.writelines(" ".join(list(map(str, line))) + "\n")
