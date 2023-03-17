@@ -56,6 +56,7 @@ def strgen(length: int, strlen = 20, isUTF = False):
 #         unsorted = [''.join(choices(utf8_letters, k=strlen)) for _ in range(length)]
 #     return sorted(unsorted, reverse=reverse)
 
+
 def increasing(rand_list: list):
     return sorted(rand_list)
 
