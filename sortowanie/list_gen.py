@@ -56,7 +56,27 @@ def strgen(length: int, strlen = 20, isUTF = False):
 #         unsorted = [''.join(choices(utf8_letters, k=strlen)) for _ in range(length)]
 #     return sorted(unsorted, reverse=reverse)
 
-start = time.perf_counter()
+
+def increasing(rand_list: list):
+    return sorted(rand_list)
+
+
+def decreasing(rand_list: list):
+    return sorted(rand_list, reverse=True)
+
+
+def constant(rand_list: list):
+    return [rand_list[0]] * len(rand_list)
+
+
+def v_shape(rand_list: list):
+    sorted_list = sorted(rand_list)
+    first_list = sorted_list[::2].copy()[::-1]
+    second_list = sorted_list[1::2].copy()
+    return first_list + second_list
+
+
+# start = time.perf_counter()
 # print(strgen(1000000))
-print(strgen(100, 20))
-print((time.perf_counter() - start)*1000)
+# print(strgen(100, 20))
+# print((time.perf_counter() - start)*1000)

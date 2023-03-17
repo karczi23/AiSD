@@ -1,4 +1,5 @@
 import time
+from list_gen import intgen, increasing, decreasing, constant, v_shape
 from list_gen import intgen
 
 
@@ -6,12 +7,14 @@ from list_gen import intgen
 def time_it(func):
     def wrapper(*args, **kwargs):
         global input_list, new_list, list_len
+        input_list = tested_list.copy()
         input_list = new_list.copy()
         list_len = len(input_list)
         start = time.time()
         result = func(*args, **kwargs)
         end = time.time()
         print(f"{func.__name__} took {end - start:.6f} seconds to execute")
+        output_list.append(end - start)
         temp_list.append(end - start)
         return result
 
@@ -154,6 +157,32 @@ def heap_sort():
 
 
 # # Call the functions
+result_list = [['Len', 'Type', 'IS', 'SS', 'HS', 'MS']]
+list_gen_types = ['rand', 'inc', 'dec', 'const', 'v-shape']
+input_list = []
+new_list = []
+output_list = [0]
+tested_list = []
+list_len = 0
+for i in range(1, 100):
+    input_list_len = i * 5
+    generated_list = intgen(input_list_len)
+    new_list = [generated_list,
+                increasing(generated_list),
+                decreasing(generated_list),
+                constant(generated_list),
+                v_shape(generated_list)]
+
+    for j in range(5):
+        output_list = [input_list_len, list_gen_types[j]]
+        tested_list = new_list[j]
+        insertion_sort()
+        selection_sort()
+        heap_sort()
+        merge_sort()
+        result_list.append(output_list)
+        
+        
 result_list = [['Lp', 'IS', 'SS', 'HS', 'MS']]
 input_list = []
 new_list = []
@@ -169,7 +198,6 @@ for i in range(100):
     heap_sort()
     merge_sort()
     result_list.append(temp_list)
-
 with open("results.txt", "w") as f:
     for line in result_list:
         f.writelines(" ".join(list(map(str, line))) + "\n")
