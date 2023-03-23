@@ -1,7 +1,8 @@
+import random
 import time
-from list_gen import intgen, increasing, decreasing, constant, v_shape
+from list_gen import intgen, increasing, decreasing, constant, v_shape, a_shape
 from list_gen import intgen
-import resource 
+# import resource
 import sys
 
 
@@ -199,8 +200,152 @@ def quick_sort():
 
     quickSort(input_list, 0, len(input_list) - 1)    
 
+
+@time_it
+def quick_sort_right():
+    def partition(array, low, high):
+
+        # choose the rightmost element as pivot
+        pivot = array[high]
+        # print(low, high, pivot)
+
+        # pointer for greater element
+        i = low - 1
+
+        # traverse through all elements
+        # compare each element with pivot
+        for j in range(low, high):
+            if array[j] <= pivot:
+                # If element smaller than pivot is found
+                # swap it with the greater element pointed by i
+                i = i + 1
+
+                # Swapping element at i with element at j
+                (array[i], array[j]) = (array[j], array[i])
+
+        # Swap the pivot element with the greater element specified by i
+        (array[i + 1], array[high]) = (array[high], array[i + 1])
+
+        # Return the position from where partition is done
+        return i + 1
+
+    # function to perform quicksort
+
+    def quickSort(array, low, high):
+        if low < high:
+            # Find pivot element such that
+            # element smaller than pivot are on the left
+            # element greater than pivot are on the right
+            pi = partition(array, low, high)
+
+            # Recursive call on the left of pivot
+            quickSort(array, low, pi - 1)
+
+            # Recursive call on the right of pivot
+            quickSort(array, pi + 1, high)
+
+    quickSort(input_list, 0, len(input_list) - 1)
+
+
+@time_it
+def quick_sort_middle():
+    def partition(array, low, high):
+
+        # choose the middle element as pivot
+        pivot = array[(high-low)//2]
+        # print(low, high, pivot)
+
+        # pointer for greater element
+        i = low - 1
+
+        # traverse through all elements
+        # compare each element with pivot
+        for j in range(low, high):
+            if array[j] <= pivot:
+                # If element smaller than pivot is found
+                # swap it with the greater element pointed by i
+                i = i + 1
+
+                # Swapping element at i with element at j
+                (array[i], array[j]) = (array[j], array[i])
+
+        # Swap the pivot element with the greater element specified by i
+        (array[i + 1], array[high]) = (array[high], array[i + 1])
+
+        # Return the position from where partition is done
+        return i + 1
+
+    # function to perform quicksort
+
+    def quickSort(array, low, high):
+        if low < high:
+            # Find pivot element such that
+            # element smaller than pivot are on the left
+            # element greater than pivot are on the right
+            pi = partition(array, low, high)
+
+            # Recursive call on the left of pivot
+            quickSort(array, low, pi - 1)
+
+            # Recursive call on the right of pivot
+            quickSort(array, pi + 1, high)
+
+    quickSort(input_list, 0, len(input_list) - 1)
+
+
+@time_it
+def quick_sort_random():
+    def partition(array, low, high):
+
+        # choose the random element as pivot
+        pivot = array[random.randint(low, high)]
+        # print(low, high, pivot)
+
+        # pointer for greater element
+        i = low - 1
+
+        # traverse through all elements
+        # compare each element with pivot
+        for j in range(low, high):
+            if array[j] <= pivot:
+                # If element smaller than pivot is found
+                # swap it with the greater element pointed by i
+                i = i + 1
+
+                # Swapping element at i with element at j
+                (array[i], array[j]) = (array[j], array[i])
+
+        # Swap the pivot element with the greater element specified by i
+        (array[i + 1], array[high]) = (array[high], array[i + 1])
+
+        # Return the position from where partition is done
+        return i + 1
+
+    # function to perform quicksort
+
+    def quickSort(array, low, high):
+        if low < high:
+            # Find pivot element such that
+            # element smaller than pivot are on the left
+            # element greater than pivot are on the right
+            pi = partition(array, low, high)
+
+            # Recursive call on the left of pivot
+            quickSort(array, low, pi - 1)
+
+            # Recursive call on the right of pivot
+            quickSort(array, pi + 1, high)
+
+    quickSort(input_list, 0, len(input_list) - 1)
+
+
 # # Call the functions
 list_gen_types = ['rand', 'inc', 'dec', 'const', 'v-shape']
+pivots = {
+    'right': quick_sort_right,
+    'middle': quick_sort_middle,
+    'random': quick_sort_random
+}
 input_list = []
 new_list = []
 output_list = [0]
@@ -211,32 +356,49 @@ end = 21
 tests = 10
 tests_list = []
 
-resource.setrlimit(resource.RLIMIT_STACK, (2**29,-1))
+# resource.setrlimit(resource.RLIMIT_STACK, (2**29,-1))
 sys.setrecursionlimit(20001)
 
+# different sorting algorithm comparation test
+# for _ in range(tests):
+#     result_list = [['Len', 'Type', 'IS', 'SS', 'HS', 'MS']]
+#     for i in range(1, end):
+#         input_list_len = i * 1000
+#         generated_list = intgen(input_list_len)
+#         print(f"\n{i}/{end-1}")
+#         new_list = [generated_list,
+#                     increasing(generated_list),
+#                     decreasing(generated_list),
+#                     constant(generated_list),
+#                     v_shape(generated_list)]
+#
+#         for j in range(5):
+#             output_list = [input_list_len, list_gen_types[j]]
+#             tested_list = new_list[j]
+#             print(f"\n{list_gen_types[j]}")
+#             insertion_sort()
+#             selection_sort()
+#             heap_sort()
+#             merge_sort()
+#             result_list.append(output_list)
+#     tests_list.append(result_list)
+
+# quick sort different pivot point test
 for _ in range(tests):
-    result_list = [['Len', 'Type', 'IS', 'SS', 'HS', 'MS', 'QS']]
+    result_list = [['Len', 'Pivot', 'Time']]
     for i in range(1, end):
         input_list_len = i * 1000
         generated_list = intgen(input_list_len)
-        print(f"\n{i}/{end-1}")
-        new_list = [generated_list,
-                    increasing(generated_list),
-                    decreasing(generated_list),
-                    constant(generated_list),
-                    v_shape(generated_list)]
+        print(f"\n{i}/{end - 1}")
 
-        for j in range(5):
-            output_list = [input_list_len, list_gen_types[j]]
-            tested_list = new_list[j]
-            print(f"\n{list_gen_types[j]}")
-            insertion_sort()
-            selection_sort()
-            heap_sort()
-            merge_sort()
-            quick_sort()
+        for j in range(3):
+            output_list = [input_list_len, list(pivots.keys())[j]]
+            tested_list = a_shape(generated_list)
+            print(f"\n{ list(pivots.keys())[j]}")
+            pivots[list(pivots.keys())[j]]()
             result_list.append(output_list)
     tests_list.append(result_list)
+
 
 for i in range(1, tests):
     one_result_list = tests_list[i - 1]

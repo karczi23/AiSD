@@ -76,6 +76,12 @@ def v_shape(rand_list: list):
     return first_list + second_list
 
 
+def a_shape(rand_list: list):
+    sorted_list = sorted(rand_list)
+    first_list = sorted_list[::2].copy()
+    second_list = sorted_list[1::2].copy()[::-1]
+    return first_list + second_list
+
 # start = time.perf_counter()
 # print(strgen(1000000))
 # print(strgen(100, 20))
