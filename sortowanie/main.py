@@ -385,17 +385,18 @@ sys.setrecursionlimit(20001)
 
 # quick sort different pivot point test
 for _ in range(tests):
-    result_list = [['Len', 'Pivot', 'Time']]
+    result_list = [['Len', 'right', 'middle', 'random']]
     for i in range(1, end):
         input_list_len = i * 1000
         generated_list = intgen(input_list_len)
         print(f"\n{i}/{end - 1}")
 
-        for j in range(3):
-            output_list = [input_list_len, list(pivots.keys())[j]]
+        for j in range(1):
+            output_list = [input_list_len]
             tested_list = a_shape(generated_list)
-            print(f"\n{ list(pivots.keys())[j]}")
-            pivots[list(pivots.keys())[j]]()
+            quick_sort_right()
+            quick_sort_middle()
+            quick_sort_random()
             result_list.append(output_list)
     tests_list.append(result_list)
 
