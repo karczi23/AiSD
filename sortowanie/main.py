@@ -2,7 +2,7 @@ import random
 import time
 from list_gen import intgen, increasing, decreasing, constant, v_shape, a_shape
 from list_gen import intgen
-# import resource
+import resource
 import sys
 
 
@@ -356,7 +356,7 @@ end = 21
 tests = 10
 tests_list = []
 
-# resource.setrlimit(resource.RLIMIT_STACK, (2**29,-1))
+resource.setrlimit(resource.RLIMIT_STACK, (2**29,-1))
 sys.setrecursionlimit(20001)
 
 # different sorting algorithm comparation test
