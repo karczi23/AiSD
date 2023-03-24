@@ -36,7 +36,7 @@ for k in range(len_results):
 with open("results_qs_merged.txt", "w") as f:
     f.write("Len right middle random\n")
     for i, a in enumerate(to_print):
-        f.write(str(ceil((i + 1) / 3)*1000)+" ")
+        f.write(str(ceil((i + 1) / 1)*1000)+" ")
         match i%1:
             case 0:
                 f.write("")
