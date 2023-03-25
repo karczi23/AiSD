@@ -8,7 +8,6 @@ This exercise compares different sorting algorithms and their behavior when used
 <li>Heap Sort</li>
 <li>Insertion Sort</li>
 <li>Selection Sort</li>
-<li>Quick Sort</li>
 </ul>
 
 For each of these algorithms we have generated random integer list that follows different distributions:
@@ -18,4 +17,11 @@ For each of these algorithms we have generated random integer list that follows 
 <li>Descending</li>
 <li>Constant</li>
 <li>V-shaped (first half descending, second half ascending)</li>
+</ul>
+
+Additionally, we tested Quick Sort algorithm with different pivots for an A-shaped list:
+<ul>
+<li>Rightmost</li>
+<li>Middle to the position</li>
+<li>Random</li>
 </ul>
