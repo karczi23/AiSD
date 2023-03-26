@@ -26,7 +26,7 @@ Additionally, we tested Quick Sort algorithm with different pivots for an A-shap
 <li>Random</li>
 </ul>
 
-#AiSD Ex. 2
+# AiSD Ex. 2
 
 This exercise makes us compare different complex data structures.
 
