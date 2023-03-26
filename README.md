@@ -25,3 +25,15 @@ Additionally, we tested Quick Sort algorithm with different pivots for an A-shap
 <li>Middle to the position</li>
 <li>Random</li>
 </ul>
+
+#AiSD Ex. 2
+
+This exercise makes us compare different complex data structures.
+
+**We want to check which structure is faster for:**
+<ul>
+<li>creation</li>
+<li>searching</li>
+<li>removal from memory</li>
+</ul>
+
