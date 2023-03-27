@@ -23,6 +23,7 @@ struct List {
 
 
 int main() {
-
+    List list = new List();
+    list.insert(&list, 3);
     return 0;
 }
