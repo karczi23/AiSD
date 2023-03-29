@@ -16,7 +16,7 @@ struct List {
     Node* head = nullptr;
     Node* tail = nullptr;
 
-    void insert(List* list, int data) {
+    void insert(int data) {
         Node* node = new Node(data);
         if (!head) {
             head = tail = node;
@@ -59,7 +59,23 @@ struct List {
             cout << current->next->data << endl;
             current = current->next;
         }
-        
+    }
+    
+    Node* findByValue(int value) {
+        Node* current = head;
+        while (current) {
+            if (current->data == value)
+                return current;
+            current = current->next;
+        }
+        return nullptr;
+    }
+    
+    void removeElements() {
+        while (head) {
+            delete head;
+            head = head->next;
+        }
     }
 };
 
@@ -68,18 +84,20 @@ int main() {
     List list = List();
 
 
-        list.insert(&list, 3);
-        list.insert(&list, 4);
-        list.insert(&list, 4);
-        list.insert(&list, 4);
-        list.insert(&list, 1);
-                list.insert(&list, 6);
-        list.insert(&list, 9);
-        list.insert(&list, 6);
-        list.insert(&list, 2);
-                list.insert(&list, 10);
-                        list.insert(&list, 11);
-                                list.insert(&list, 10);
+    list.insert(3);
+    list.insert(4);
+    list.insert(4);
+    list.insert(4);
+    list.insert(1);
+    list.insert(6);
+    list.insert(9);
+    list.insert(6);
+    list.insert(2);
+    list.insert(10);
+    list.insert(11);
+    list.insert(10);
     list.print();
+    list.removeElements();
+    cout << list.findByValue(10) << list.head << endl;
     return 0;
 }
