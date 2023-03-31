@@ -2,102 +2,78 @@
 
 using namespace std;
 
-struct Node {
-    Node* next = nullptr;
+struct Tree {
     int data;
-
-    Node(int data) {
+    Tree* left;
+    Tree* right;
+    
+    Tree(int data) {
         this->data = data;
-    };
-    
-};
-
-struct List {
-    Node* head = nullptr;
-    Node* tail = nullptr;
-
-    void insert(int data) {
-        Node* node = new Node(data);
-        if (!head) {
-            head = tail = node;
-            return;
-        }
-        Node* before = find(data);
-        if (before == nullptr) {
-            node->next = head;
-            head = node;
-            return;
-        }
-        node->next = before->next;
-        before->next = node;
-    }
-    
-    Node* find(int data) {
-        Node* prev = nullptr;
-        Node* current = head;
-        while(current->next) {
-            if (current->data >= data) {
-                return prev;
-            }
-            prev = current;
-            current = current->next;
-        }
-        if (current != head) {
-            return current;
-        
-        }
-        if (current->data > data) {
-            return nullptr;
-        }
-        return current;
-    }
-    
-    void print() {
-        Node* current = head;
-        cout << current->data << endl;
-        while(current->next) {
-            cout << current->next->data << endl;
-            current = current->next;
-        }
-    }
-    
-    Node* findByValue(int value) {
-        Node* current = head;
-        while (current) {
-            if (current->data == value)
-                return current;
-            current = current->next;
-        }
-        return nullptr;
-    }
-    
-    void removeElements() {
-        while (head) {
-            delete head;
-            head = head->next;
-        }
+        this->left = this->right = nullptr;
     }
 };
+    
+Tree* insert(Tree* root, int data) {
+	if (!root) {
+        root = new Tree(data);
+		return root;
+	}
+    if (root->data > data) {
+        root->left = insert(root->left, data);
+    } else {
+        root->right = insert(root->right, data);
+    }
+    return root;
+}
 
+void del(Tree* root) {
+    if (!root)
+        return;
+    del(root->left);
+    del(root->right);
+    delete root;
+}
+
+    
+void inorder(Tree* root) {
+    if (root) {
+    	inorder(root->left);
+		cout << root->data << endl;
+		inorder(root->right);
+    }
+}
+
+void postorder(Tree* root) {
+    if (root) {
+		postorder(root->left);
+    	postorder(root->right);
+    	cout << root->data << endl;
+	}
+}
+
+void preorder(Tree* root) {
+    if (root) {
+    	cout << root->data << endl;
+    	preorder(root->left);
+		preorder(root->right);
+    }
+}
 
 int main() {
-    List list = List();
-
-
-    list.insert(3);
-    list.insert(4);
-    list.insert(4);
-    list.insert(4);
-    list.insert(1);
-    list.insert(6);
-    list.insert(9);
-    list.insert(6);
-    list.insert(2);
-    list.insert(10);
-    list.insert(11);
-    list.insert(10);
-    list.print();
-    list.removeElements();
-    cout << list.findByValue(10) << list.head << endl;
+    Tree* root = new Tree(5);
+    insert(root, 4);
+    insert(root, 7);
+    insert(root, 2);
+    insert(root, 9);
+    insert(root, 5);
+    insert(root, 3);
+    insert(root, 11);
+    insert(root, 1);
+    insert(root, 7);
+    insert(root, 8);
+    
+    inorder(root);
+    cout << "\n" << endl;
+    del(root);
     return 0;
 }
