@@ -1,5 +1,6 @@
 #include <iostream>
-
+#include <vector>
+#include "Num_gen.h"
 using namespace std;
 
 struct Tree {
@@ -60,17 +61,20 @@ void preorder(Tree* root) {
 }
 
 int main() {
-    Tree* root = new Tree(5);
-    insert(root, 4);
-    insert(root, 7);
-    insert(root, 2);
-    insert(root, 9);
-    insert(root, 5);
-    insert(root, 3);
-    insert(root, 11);
-    insert(root, 1);
-    insert(root, 7);
-    insert(root, 8);
+    long int len = 100; // length of the random list
+    Tree* root = new Tree(3);
+    vector<long int> random_list;
+
+    random_list = rand_gen(len);
+
+//    print all numbers in random_list
+//    for(int num: random_list) {
+//        cout << num << " ";
+//    }
+
+    for (long int i = 0; i < len; i++) {
+        insert(root, random_list[i]);
+    }
     
     inorder(root);
     del(root);

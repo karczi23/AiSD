@@ -1,4 +1,6 @@
 #include <iostream>
+#include <vector>
+#include "Num_gen.h"
 
 using namespace std;
 
@@ -82,22 +84,23 @@ struct List {
 
 int main() {
     List list = List();
+    vector<long int> random_list;
 
+    long int len = 100; // length of the random list to
+    random_list = rand_gen(len);
 
-    list.insert(3);
-    list.insert(4);
-    list.insert(4);
-    list.insert(4);
-    list.insert(1);
-    list.insert(6);
-    list.insert(9);
-    list.insert(6);
-    list.insert(2);
-    list.insert(10);
-    list.insert(11);
-    list.insert(10);
+//    print all numbers in random_list
+//    for(int num: random_list) {
+//        cout << num << " ";
+//    }
+
+    for (long int i = 0; i < len; i++) {
+        list.insert(random_list[i]);
+    }
+
     list.print();
     list.removeElements();
     cout << list.findByValue(10) << list.head << endl;
+
     return 0;
 }
