@@ -1,93 +1,114 @@
 #include <iostream>
 #include <vector>
-#include "Num_gen.h"
+#include <algorithm>
+#include <chrono>
+#include <random>
+
 using namespace std;
 
-struct Tree {
+vector<long int> rand_gen(long int len) {
+    vector<long int> numbers;
+
+    for (long int i = 0; i < len; i ++) {
+        numbers.push_back(i);
+    }
+
+    mt19937 seed(chrono::system_clock::now().time_since_epoch().count());
+    shuffle(numbers.begin(), numbers.end(), seed);
+
+    return numbers;
+}
+
+struct Node {
+    Node* next = nullptr;
     int data;
-    Tree* left;
-    Tree* right;
-    
-    Tree(int data) {
+
+    Node(int data) {
         this->data = data;
-        this->left = this->right = nullptr;
+    };
+    
+};
+
+struct List {
+    Node* head = nullptr;
+
+    void insert(int data) {
+        Node* node = new Node(data);
+        if (!head) {
+            head = node;
+            node->next = nullptr;
+            return;
+        }
+        Node* before = find(data);
+        if (before == nullptr) {
+            node->next = head;
+            head = node;
+            return;
+        }
+        node->next = before->next;
+        before->next = node;
+    }
+    
+    Node* find(int data) {
+        Node* prev = nullptr;
+        Node* current = head;
+        while(current) {
+            if (current->data >= data) {
+                return prev;
+            }
+            prev = current;
+            current = current->next;
+        }
+
+        return prev;
+    }
+    
+    void print() {
+        Node* current = head;
+        cout << current->data << endl;
+        while(current->next) {
+            cout << current->next->data << endl;
+            current = current->next;
+        }
+    }
+    
+    Node* findByValue(int value) {
+        Node* current = head;
+        while (current) {
+            if (current->data == value)
+                return current;
+            current = current->next;
+        }
+        return nullptr;
+    }
+    
+    void removeElements() {
+        while (head) {
+            delete head;
+            head = head->next;
+        }
     }
 };
-    
-Tree* insert(Tree* root, int data) {
-	if (!root) {
-        root = new Tree(data);
-		return root;
-	}
-    if (root->data > data) {
-        root->left = insert(root->left, data);
-    } else {
-        root->right = insert(root->right, data);
-    }
-    return root;
-}
 
-void del(Tree* root) {
-    if (!root)
-        return;
-    del(root->left);
-    del(root->right);
-    delete root;
-}
-
-    
-void inorder(Tree* root) {
-    if (root) {
-    	inorder(root->left);
-		cout << root->data << endl;
-		inorder(root->right);
-    }
-}
-
-void postorder(Tree* root) {
-    if (root) {
-		postorder(root->left);
-    	postorder(root->right);
-    	cout << root->data << endl;
-	}
-}
-
-void preorder(Tree* root) {
-    if (root) {
-    	cout << root->data << endl;
-    	preorder(root->left);
-		preorder(root->right);
-    }
-}
-
-
-Tree* find(Tree* root, int value) {
-    if (root->data == value)
-        return root;
-    if (root->data > value)
-        return find(root->left, value);
-    else
-        return find(root->right, value);
-    return nullptr;
-}
 
 int main() {
-    long int len = 100; // length of the random list
-    Tree* root = new Tree(3);
+    List list = List();
     vector<long int> random_list;
 
+    long int len = 100; // length of the random list to
     random_list = rand_gen(len);
-
-//    print all numbers in random_list
-//    for(int num: random_list) {
-//        cout << num << " ";
-//    }
-
-    for (long int i = 0; i < len; i++) {
-        insert(root, random_list[i]);
+    for (auto i : random_list) {
+        cout << i << endl;
     }
     
-    inorder(root);
-    del(root);
+    cout << endl;
+    
+    for (long int i = 0; i < len; i++) {
+        list.insert(random_list[i]);
+    }
+    
+    list.print();
+    list.removeElements();
+
     return 0;
 }
