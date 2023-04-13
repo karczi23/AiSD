@@ -60,6 +60,16 @@ void preorder(Tree* root) {
     }
 }
 
+Tree* find(Tree* root, int value) {
+    if (root->data == value)
+        return root;
+    if (root->data > value)
+        return find(root->left, value);
+    else
+        return find(root->right, value);
+    return nullptr;
+}
+
 int main() {
     long int len = 100; // length of the random list
     Tree* root = new Tree(3);
