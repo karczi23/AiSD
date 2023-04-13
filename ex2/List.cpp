@@ -24,7 +24,8 @@ struct List {
     void insert(int data) {
         Node* node = new Node(data);
         if (!head) {
-            head = tail = node;
+            head = node;
+            node->next = nullptr;
             return;
         }
         Node* before = find(data);
@@ -36,25 +37,19 @@ struct List {
         node->next = before->next;
         before->next = node;
     }
-    
+
     Node* find(int data) {
         Node* prev = nullptr;
         Node* current = head;
-        while(current->next) {
+        while(current) {
             if (current->data >= data) {
                 return prev;
             }
             prev = current;
             current = current->next;
         }
-        if (current != head) {
-            return current;
-        
-        }
-        if (current->data > data) {
-            return nullptr;
-        }
-        return current;
+
+        return prev;
     }
     
     void print() {
