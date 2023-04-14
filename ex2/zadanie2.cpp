@@ -69,6 +69,34 @@ void postorder(Tree* root) {
         cout << root->data << endl;
     }
 }
+vector<long int> slicing(vector<long int>& arr, long int X, long int Y) {
+    // Starting and Ending iterators
+    auto start = arr.begin() + X;
+    auto end = arr.begin() + Y + 1;
+
+    // To store the sliced vector
+    vector<long int> result(Y - X + 1);
+
+    // Copy vector using copy function()
+    copy(start, end, result.begin());
+
+    // Return the final sliced vector
+    return result;
+}
+void generate_avl(Tree* root, vector<long int> list) {
+    long int middle = (list.size() - 1) / 2;
+    insert(root, list[middle]);
+//    cout << middle << " " << list[middle] << endl;
+    if (list.size() == 1) {
+        return;
+    }
+    if (middle != 0) {
+//        cout << "left " << middle-1 << endl;
+        generate_avl(root, slicing(list, 0, middle-1));
+    }
+//    cout << "right " << middle+1 << " " << list.size() << endl;
+    generate_avl(root, slicing(list, middle+1, list.size()-1));
+}
 
 vector<long int> preorder(Tree* root) {
     if (root) {
@@ -103,66 +131,56 @@ int find_height(Tree* root) {
         return righth + 1;
     }
 }
-vector<long int> slicing(vector<long int>& arr,
-                    long int X, long int Y)
-{
-
-    // Starting and Ending iterators
-    auto start = arr.begin() + X;
-    auto end = arr.begin() + Y + 1;
-
-    // To store the sliced vector
-    vector<long int> result(Y - X + 1);
-
-    // Copy vector using copy function()
-    copy(start, end, result.begin());
-
-    // Return the final sliced vector
-    return result;
-}
-void avl(Tree* root, vector<long int> list) {
-    if (list.size() == 1) {
-        insert(root, list[0]);
-    }
-    long int middle = list.size() / 2;
-    avl(root, slicing(list, 0, middle-1));
-    avl(root, slicing(list, middle+1, list.size()));
-}
 
 int main() {
     vector<long int> random_list;
     vector<long int> preorder_list;
     vector<long int> inorder_list;
-    int len = 10;
-    random_list = rand_gen(len);
+    int beg = 10;
+    int step = 10;
+    int iterations = 5000;
+    int repeats = 7;
+    cout << "len BST AVL" << endl;
+    for (int i = 0; i < iterations; i++) {
+        int len = beg + step * i;
+        random_list = rand_gen(len);
+        Tree *root = new Tree(random_list[0]);
+        cout << len << " ";
+        for (long int i = 1; i < len; i++) {
+            insert(root, random_list[i]);
+        }
 
-    Tree *root = new Tree(random_list[0]);
+//    cout << "kolejność preorder: " << endl;
+        preorder_list = preorder(root);
+//    for (int num: preorder_list) {
+//        cout << num << endl;
+//    }
+        cout << find_height(root)<< " ";
 
-    for (long int i = 1; i < len; i++) {
-        insert(root, random_list[i]);
+//    cout << "kolejność inorder: " << endl;
+        temp_list.clear();
+        inorder_list = inorder(root);
+//    for (int num: inorder_list) {
+//        cout << num << endl;
+//    }
+
+
+//        cout << "Drzewo AVL" << endl;
+        Tree *avl = new Tree(inorder_list[inorder_list.size()/2]);
+        temp_list.clear();
+
+        generate_avl(avl, inorder_list);
+
+//    for (int num: inorder(avl)) {
+//        cout << num << endl;
+//    }
+        cout << find_height(avl) << endl;
+
+
+//        for (int j = 0; j < repeats; j++) {
+//
+//        }
     }
 
-    cout << "kolejność preorder: " << endl;
-    preorder_list = preorder(root);
-    for (int num: preorder_list) {
-        cout << num << endl;
-    }
-    cout << endl << "Wysokość tego drzewa BST wynosi: " <<find_height(root) << endl << endl;
-
-    cout << "kolejność inorder: " << endl;
-    temp_list.clear();
-    inorder_list = inorder(root);
-    for (int num: inorder_list) {
-        cout << num << endl;
-    }
-
-    cout << "Drzewo AVL" << endl;
-    Tree *avl = new Tree(inorder_list[inorder_list.size()/2]);
-    avl(avl, inorder_list);
-
-    temp_list.clear();
-    for (int num: inorder(avl)) {
-        cout << num << endl;
-    }
     return 0;
 }
