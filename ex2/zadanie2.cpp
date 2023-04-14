@@ -34,10 +34,24 @@ void del(Tree* root) {
         return;
     del(root->left);
     del(root->right);
+    cout << root->data << endl;
     delete root;
+
 }
 
-
+void del(Tree* root, int data) {
+//    if (root) {
+//        cout << "halo " << endl;
+//        root->data = data;
+//        root->left = nullptr;
+//        root->right = nullptr;
+//        return;
+//    }
+    cout << root->data << endl;
+    del(root->left);
+    del(root->right);
+    delete root;
+}
 vector<long int> inorder(Tree* root) {
     if (root) {
         inorder(root->left);
@@ -89,6 +103,31 @@ int find_height(Tree* root) {
         return righth + 1;
     }
 }
+vector<long int> slicing(vector<long int>& arr,
+                    long int X, long int Y)
+{
+
+    // Starting and Ending iterators
+    auto start = arr.begin() + X;
+    auto end = arr.begin() + Y + 1;
+
+    // To store the sliced vector
+    vector<long int> result(Y - X + 1);
+
+    // Copy vector using copy function()
+    copy(start, end, result.begin());
+
+    // Return the final sliced vector
+    return result;
+}
+void avl(Tree* root, vector<long int> list) {
+    if (list.size() == 1) {
+        insert(root, list[0]);
+    }
+    long int middle = list.size() / 2;
+    avl(root, slicing(list, 0, middle-1));
+    avl(root, slicing(list, middle+1, list.size()));
+}
 
 int main() {
     vector<long int> random_list;
@@ -103,12 +142,14 @@ int main() {
         insert(root, random_list[i]);
     }
 
+    cout << "kolejność preorder: " << endl;
     preorder_list = preorder(root);
     for (int num: preorder_list) {
         cout << num << endl;
     }
     cout << endl << "Wysokość tego drzewa BST wynosi: " <<find_height(root) << endl << endl;
 
+    cout << "kolejność inorder: " << endl;
     temp_list.clear();
     inorder_list = inorder(root);
     for (int num: inorder_list) {
@@ -116,12 +157,12 @@ int main() {
     }
 
     cout << "Drzewo AVL" << endl;
-    cout << inorder_list.size() / 2 << endl;
-    Tree *avl = new Tree(1);
-    insert(avl, 2);
+    Tree *avl = new Tree(inorder_list[inorder_list.size()/2]);
+    avl(avl, inorder_list);
+
+    temp_list.clear();
     for (int num: inorder(avl)) {
         cout << num << endl;
     }
-
     return 0;
 }
