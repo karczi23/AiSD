@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <chrono>
+#include <math.h>
 #include "Num_gen.h"
 using namespace std;
 vector<long int> temp_list;
@@ -136,13 +137,13 @@ int main() {
     vector<long int> random_list;
     vector<long int> preorder_list;
     vector<long int> inorder_list;
-    int beg = 10;
-    int step = 10;
+    int beg = 2;
+    int step = 2;
     int iterations = 5000;
     int repeats = 7;
     cout << "len BST AVL" << endl;
     for (int i = 0; i < iterations; i++) {
-        int len = beg + step * i;
+        int len = pow(beg, i);
         random_list = rand_gen(len);
         Tree *root = new Tree(random_list[0]);
         cout << len << " ";
