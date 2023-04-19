@@ -107,30 +107,36 @@ int main() {
     List list = List();
     vector<long int> random_list;
     int step = 2000; // step between current and next length of generated list
-    int iterations = 10; // number of iterations
-    int begin_len = 1000; // length of first generated list
+    int iterations = 20; // number of iterations
+    int begin_len = 2000; // length of first generated list
 
     cout << "len create find delete" << endl;
 
     for (int j = 0; j < iterations; j++) {
 
         long int len = begin_len + step * j; // length of the random list to generate
-        random_list = rand_gen(len);
-        Tree* root = new Tree(random_list[0]);
-//        cout << j + 1 << "/" << iterations << endl;
-        cout << len << " ";
+        int repeats = 7;
+        long int creation = 0;
+        long int find_ = 0;
+        long int del_ = 0;
+        for (int k = 0; k < repeats; k++) {
+            random_list = rand_gen(len);
+            Tree *root = new Tree(random_list[0]);
+            //        cout << j + 1 << "/" << iterations << endl;
+//            cout << len << " ";
 
-//      creation of list
-        auto begin_creation = chrono::high_resolution_clock::now();
+            //      creation of list
+            auto begin_creation = chrono::high_resolution_clock::now();
 
-        for (long int i = 1; i < len; i++) {
-            insert(root, random_list[i]);
-        }
+            for (long int i = 1; i < len; i++) {
+                insert(root, random_list[i]);
+            }
 
-        auto end_creation = chrono::high_resolution_clock::now();
-        auto elapsed_creation = chrono::duration_cast<chrono::nanoseconds>(end_creation - begin_creation);
+            auto end_creation = chrono::high_resolution_clock::now();
+            auto elapsed_creation = chrono::duration_cast<chrono::nanoseconds>(end_creation - begin_creation);
 
-        cout << elapsed_creation.count() << " ";
+//            cout << elapsed_creation.count() << " ";
+            creation += elapsed_creation.count();
 
     long int len = 100; // length of the random list to
     random_list = rand_gen(len);
@@ -148,28 +154,35 @@ int main() {
     list.removeElements();
 
 
-//      finding all elements of list
-        auto begin_find = chrono::high_resolution_clock::now();
+            //      finding all elements of list
+            auto begin_find = chrono::high_resolution_clock::now();
 
-        for (int num: random_list) {
-            find(root, num);
+            for (int num: random_list) {
+                find(root, num);
+            }
+
+            auto end_find = chrono::high_resolution_clock::now();
+            auto elapsed_find = chrono::duration_cast<chrono::nanoseconds>(end_find - begin_find);
+
+//            cout << elapsed_find.count() << " ";
+            find_ += elapsed_find.count();
+
+
+            //      deletion of list
+            auto begin_delete = chrono::high_resolution_clock::now();
+
+            del(root);
+
+
+            auto end_delete = chrono::high_resolution_clock::now();
+            auto elapsed_delete = chrono::duration_cast<chrono::nanoseconds>(end_delete - begin_delete);
+
+//            cout << elapsed_delete.count() << endl;
+            del_ += elapsed_delete.count();
         }
 
-        auto end_find = chrono::high_resolution_clock::now();
-        auto elapsed_find = chrono::duration_cast<chrono::nanoseconds>(end_find - begin_find);
+        cout << len << " " << creation / repeats << " " << find_ / repeats << " " << del_ / repeats << endl;
 
-        cout << elapsed_find.count() << " ";
-
-
-//      deletion of list
-        auto begin_delete = chrono::high_resolution_clock::now();
-
-        del(root);
-
-        auto end_delete = chrono::high_resolution_clock::now();
-        auto elapsed_delete = chrono::duration_cast<chrono::nanoseconds>(end_delete - begin_delete);
-
-        cout << elapsed_delete.count() << endl;
     }
     return 0;
 }

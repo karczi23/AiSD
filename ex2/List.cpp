@@ -189,64 +189,74 @@ struct List {
 int main() {
     vector<long int> random_list;
     int step = 2000; // step between current and next length of generated list
-    int iterations = 10; // number of iterations
-    int begin_len = 1000; // length of first generated list
+    int iterations = 20; // number of iterations
+    int begin_len = 2000; // length of first generated list
     vector<vector<int>> results_all; // nested list with all the results
     vector<int> results; // list with results of one iteration
 
     cout << "len create find delete" << endl;
 
     for (int j = 0; j < iterations; j++) {
-        List list = List();
         long int len = begin_len + step * j; // length of the random list to generate
-        random_list = rand_gen(len);
+        int repeats = 7;
+        long int creation = 0;
+        long int find = 0;
+        long int del = 0;
+        for (int k = 0; k < repeats; k++) {
+            List list = List();
+            random_list = rand_gen(len);
 //        cout << j + 1 << "/" << iterations << endl;
-        cout << len << " ";
+//            cout << len << " ";
 
 //      creation of list
-        auto begin_creation = chrono::high_resolution_clock::now();
+            auto begin_creation = chrono::high_resolution_clock::now();
 
-        for (long int i = 0; i < len; i++) {
-            list.insert(random_list[i]);
-        }
+            for (long int i = 0; i < len; i++) {
+                list.insert(random_list[i]);
+            }
 
-        auto end_creation = chrono::high_resolution_clock::now();
-        auto elapsed_creation = chrono::duration_cast<chrono::nanoseconds>(end_creation - begin_creation);
+            auto end_creation = chrono::high_resolution_clock::now();
+            auto elapsed_creation = chrono::duration_cast<chrono::nanoseconds>(end_creation - begin_creation);
 
-        cout << elapsed_creation.count() << " ";
+            creation += elapsed_creation.count();
+//            cout << elapsed_creation.count() << " ";
 
 
 //      finding all elements of list
-        auto begin_find = chrono::high_resolution_clock::now();
+            auto begin_find = chrono::high_resolution_clock::now();
 
-        for (int num: random_list) {
-            list.find(num);
-        }
+            for (int num: random_list) {
+                list.find(num);
+            }
 
-        auto end_find = chrono::high_resolution_clock::now();
-        auto elapsed_find = chrono::duration_cast<chrono::nanoseconds>(end_find - begin_find);
+            auto end_find = chrono::high_resolution_clock::now();
+            auto elapsed_find = chrono::duration_cast<chrono::nanoseconds>(end_find - begin_find);
 
-        cout << elapsed_find.count() << " ";
-
+//            cout << elapsed_find.count() << " ";
+            find += elapsed_find.count();
 
 //      deletion of list
-        auto begin_delete = chrono::high_resolution_clock::now();
+            auto begin_delete = chrono::high_resolution_clock::now();
 
-        list.removeElements();
+            list.removeElements();
 
-        auto end_delete = chrono::high_resolution_clock::now();
-        auto elapsed_delete = chrono::duration_cast<chrono::nanoseconds>(end_delete - begin_delete);
+            auto end_delete = chrono::high_resolution_clock::now();
+            auto elapsed_delete = chrono::duration_cast<chrono::nanoseconds>(end_delete - begin_delete);
 
-        cout << elapsed_delete.count() << endl;
+//            cout << elapsed_delete.count() << endl;
+            del += elapsed_delete.count();
+
+//            results.push_back(len);
+//            results.push_back(elapsed_creation.count());
+//            results.push_back(elapsed_find.count());
+//            results.push_back(elapsed_delete.count());
 //
-        results.push_back(len);
-        results.push_back(elapsed_creation.count());
-        results.push_back(elapsed_find.count());
-        results.push_back(elapsed_delete.count());
-
-        results_all.push_back(results);
-        results.clear();
+//            results_all.push_back(results);
+//            results.clear();
+        }
+        cout << len << " " << creation / repeats << " " << find / repeats << " " << del / repeats << endl;
     }
+
     return 0;
 }
 
