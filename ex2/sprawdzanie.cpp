@@ -124,7 +124,6 @@ int find_height(Tree* root) {
     if (root == nullptr) {
         return -1;
     }
-
     int lefth = find_height(root->left);
     int righth = find_height(root->right);
 
@@ -135,25 +134,37 @@ int find_height(Tree* root) {
     }
 }
 
+void find_height(Tree* root, int num, int height = 0) {
+    if (root == nullptr) {
+        return;
+    }
+    if (num == root->data) {
+        cout << height;
+        return;
+    } else {
+        find_height(root->left, num, height + 1);
+        find_height(root->right, num, height + 1);
+    }
+}
 int main() {
-    vector<long int> random_list = {21, 4321, 4, 436, 66, 52, 5443, 432};
+    vector<long int> input_list = {43, 11, 23, 322, 13};
     vector<long int> output_list;
     vector<long int> inorder_list;
 //    int beg = 2;
 //    int iterations = 5;
 //    int len = pow(beg, i);
-//    random_list = rand_gen(len);
-    int len = random_list.size();
+//    input_list = rand_gen(len);
+    int len = input_list.size();
     cout << "Lista wejsciowa: ";
-    for (int num: random_list) {
+    for (int num: input_list) {
         cout << num << " ";
     }
     cout << endl << endl;
 
     cout << "Drzewo BST:" << endl;
-    Tree *root = new Tree(random_list[0]);
+    Tree *root = new Tree(input_list[0]);
     for (long int i = 1; i < len; i++) {
-        insert(root, random_list[i]);
+        insert(root, input_list[i]);
     }
 
     cout << "kolejnosc preorder: ";
@@ -225,7 +236,11 @@ int main() {
     output_list.clear();
 
     cout << "wysokosc: ";
-    cout << find_height(avl)<< endl;
+    cout << find_height(avl) << endl << endl;
 
+    // finding on what level element is
+    int num = 23;
+    cout << "Element " << num << " znajduje sie na wysokosci ";
+    find_height(avl, num);
     return 0;
 }
