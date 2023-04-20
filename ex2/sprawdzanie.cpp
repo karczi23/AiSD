@@ -64,12 +64,13 @@ vector<long int> inorder(Tree* root) {
     return temp_list;
 }
 
-void postorder(Tree* root) {
+vector<long int> postorder(Tree* root) {
     if (root) {
         postorder(root->left);
         postorder(root->right);
-        cout << root->data << endl;
+        temp_list.push_back(root->data);
     }
+    return temp_list;
 }
 vector<long int> slicing(vector<long int>& arr, long int X, long int Y) {
     // Starting and Ending iterators
@@ -135,34 +136,96 @@ int find_height(Tree* root) {
 }
 
 int main() {
-    vector<long int> random_list;
-    vector<long int> preorder_list;
+    vector<long int> random_list = {21, 4321, 4, 436, 66, 52, 5443, 432};
+    vector<long int> output_list;
     vector<long int> inorder_list;
-    int beg = 2;
-    int iterations = 5;
-    cout << "len BST AVL" << endl;
-    for (int i = 0; i < iterations; i++) {
-        int len = pow(beg, i);
-        random_list = rand_gen(len);
-
-        Tree *root = new Tree(random_list[0]);
-        cout << len << " ";
-        for (long int i = 1; i < len; i++) {
-            insert(root, random_list[i]);
-        }
-        cout << find_height(root)<< " ";
-        temp_list.clear();
-
-        inorder_list = inorder(root);
-        long int median = inorder_list[inorder_list.size()/2];
-        inorder_list.erase(inorder_list.begin() + inorder_list.size()/2);
-        Tree *avl = new Tree(median);
-        temp_list.clear();
-        if (inorder_list.size() != 0) {
-            generate_avl(avl, inorder_list);
-        }
-        cout << find_height(avl) << endl;
+//    int beg = 2;
+//    int iterations = 5;
+//    int len = pow(beg, i);
+//    random_list = rand_gen(len);
+    int len = random_list.size();
+    cout << "Lista wejsciowa: ";
+    for (int num: random_list) {
+        cout << num << " ";
     }
+    cout << endl << endl;
+
+    cout << "Drzewo BST:" << endl;
+    Tree *root = new Tree(random_list[0]);
+    for (long int i = 1; i < len; i++) {
+        insert(root, random_list[i]);
+    }
+
+    cout << "kolejnosc preorder: ";
+    output_list = preorder(root);
+    for (int num: output_list) {
+        cout << num << " ";
+    }
+    cout << endl;
+    temp_list.clear();
+    output_list.clear();
+
+    cout << "kolejnosc postorder: ";
+    output_list = postorder(root);
+    for (int num: output_list) {
+        cout << num << " ";
+    }
+    cout << endl;
+    temp_list.clear();
+    output_list.clear();
+
+    cout << "kolejnosc inorder: ";
+    output_list = inorder(root);
+    for (int num: output_list) {
+        cout << num << " ";
+    }
+    cout << endl;
+    temp_list.clear();
+    output_list.clear();
+
+    cout << "wysokosc: ";
+    cout << find_height(root)<< endl << endl;
+
+
+    cout << "Drzewo AVL:" << endl;
+    inorder_list = inorder(root);
+    long int median = inorder_list[inorder_list.size()/2];
+    inorder_list.erase(inorder_list.begin() + inorder_list.size()/2);
+    Tree *avl = new Tree(median);
+    if (inorder_list.size() != 0) {
+        generate_avl(avl, inorder_list);
+    }
+
+    temp_list.clear();
+    cout << "kolejnosc preorder: ";
+    output_list = preorder(avl);
+    for (int num: output_list) {
+        cout << num << " ";
+    }
+    cout << endl;
+    temp_list.clear();
+    output_list.clear();
+
+    cout << "kolejnosc postorder: ";
+    output_list = postorder(avl);
+    for (int num: output_list) {
+        cout << num << " ";
+    }
+    cout << endl;
+    temp_list.clear();
+    output_list.clear();
+
+    cout << "kolejnosc inorder: ";
+    output_list = inorder(avl);
+    for (int num: output_list) {
+        cout << num << " ";
+    }
+    cout << endl;
+    temp_list.clear();
+    output_list.clear();
+
+    cout << "wysokosc: ";
+    cout << find_height(avl)<< endl;
 
     return 0;
 }
