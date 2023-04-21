@@ -1,4 +1,4 @@
-from random import randint
+from random import randint, choices
 from time import sleep
 
 class DAG:
@@ -11,27 +11,30 @@ class DAG:
         self.vertices = int(vertices)
         self.saturation = saturation
         self.matrix = []
+        self.possible_edges = []
     
     def create_neighbourhood_matrix(self) -> list:
         edges = int(self.__get_full_saturation_size() * self.saturation)
- 
+
+        self.possible_edges = [(i, j) for i in range(0, self.vertices - 1) for j in range(i + 1, self.vertices)]
+
         self.matrix = [[0 for _ in range(self.vertices)] for _ in range(self.vertices)]
 
-        i = 0
-        while i < edges:
-            lower = randint(0, self.vertices - 2) # vertices - 1 (because of list indexes being "-1" ) 
-                                                  # - 1 (because the "lower index vertex" can't be the last one)
-            higher = randint(lower + 1, self.vertices - 1)
-            if self.matrix[lower][higher] == 0:
-                self.matrix[lower][higher] = 1
-                self.matrix[higher][lower] = -1
-                i += 1
+        ch = choices(population = self.possible_edges, k = edges)
+
+        for item in ch:
+            self.matrix[item[0]][item[1]] = 1
+            self.matrix[item[1]][item[0]] = -1
 
         print(*[f"{i + 1}," for i in range(self.vertices)])
         for i in range(self.vertices):
             print(self.matrix[i]) 
 
         return self.matrix
+    
+    def top_sort(self, elem: tuple):
+        
+        pass
 
 
     def get_vertices(self):
