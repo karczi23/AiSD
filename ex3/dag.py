@@ -44,11 +44,12 @@ class DAG:
         # print(*[f"{i + 1}," for i in range(self.vertices)])
         # for i in range(self.vertices):
         #     print(self.matrix[i]) 
-
+        while (len(self.top_sort_neighbourhood_matrix()) != self.vertices):
+            return self.create_neighbourhood_matrix()
         return self.matrix
     
     #Kahn algorithm
-    def top_sort_neighbourhood_matrix(self):
+    def top_sort_neighbourhood_matrix(self) -> list:
         # first element will always be "1" vertex
         top_sort_list = []
         lookup_matrix = deepcopy(self.matrix)
@@ -68,7 +69,7 @@ class DAG:
                     for vertex in lookup_matrix:
                         vertex[index] = 0
                     break
-        print(top_sort_list)
+        return top_sort_list
             
 
 
