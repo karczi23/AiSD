@@ -12,7 +12,9 @@ class DAG:
         self.vertices = int(vertices)
         self.saturation = saturation
         self.matrix = []
-        
+        self.splist = []
+        for i in range(self.vertices):
+            self.splist.append([])
         # matrix used for top sort testing (correct top sort is 1, 10, 5, 2, 3, 7, 8, 4, 6, 9)
         # self.matrix = [
         #     [0,1,0,0,0,0,0,0,0,1],
@@ -27,6 +29,9 @@ class DAG:
         #     [-1,0,0,0,1,1,0,0,0,0]
         # ]
         self.possible_edges = []
+        self.create_neighbourhood_matrix()
+        self.convert_neighbourhood_matrix_into_predecessors_list()
+
     
     def create_neighbourhood_matrix(self) -> list:
         edges = int(self.__get_full_saturation_size() * self.saturation)
@@ -70,9 +75,26 @@ class DAG:
                         vertex[index] = 0
                     break
         return top_sort_list
+    
+    def top_sort_predecessors_list(self):
+        top_sort_list = []
+        lookup_list = deepcopy(self.splist)
+        for _ in lookup_list:
+            for index, vertex in enumerate(lookup_list):
+                if len(vertex) == 0 and (index + 1) not in top_sort_list:
+                    top_sort_list.append(index + 1)
+                    for vertex in lookup_list:
+                        try:
+                            vertex.remove(index)
+                        except ValueError:
+                            pass
+        return top_sort_list
             
-
-
+    def convert_neighbourhood_matrix_into_predecessors_list(self):
+        for i, vertex in enumerate(self.matrix):
+            for j, elem in enumerate(vertex):
+                if elem == -1:
+                    self.splist[i].append(j)
 
     def get_vertices(self):
         return self.vertices
@@ -83,6 +105,7 @@ class DAG:
     def __get_full_saturation_size(self):
         return self.vertices * (self.vertices - 1) / 2
     
-dag = DAG(vertices=10, saturation=0.35)
-dag.create_neighbourhood_matrix()
+dag = DAG(vertices=100, saturation=0.1)
+print(dag.splist)
+print(dag.top_sort_predecessors_list())
 dag.top_sort_neighbourhood_matrix()
