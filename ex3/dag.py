@@ -49,7 +49,7 @@ class DAG:
         # print(*[f"{i + 1}," for i in range(self.vertices)])
         # for i in range(self.vertices):
         #     print(self.matrix[i]) 
-        while (len(self.top_sort_neighbourhood_matrix()) != self.vertices):
+        while (len(self.top_sort_neighbourhood_matrix()[0]) != self.vertices):
             return self.create_neighbourhood_matrix()
         return self.matrix
     
@@ -62,8 +62,9 @@ class DAG:
         # index = self.matrix.index(independent_vertex)
         # top_sort_list.append(index + 1) # we count from 1, not 0
         #     # for elem in vertex:
-
-        for _ in lookup_matrix:
+        start = time_ns()
+        while len(top_sort_list) != self.vertices:
+        # for _ in lookup_matrix:
             for index, vertex in enumerate(lookup_matrix):
                 if (index + 1) in top_sort_list:
                     continue
@@ -77,12 +78,14 @@ class DAG:
                     for vertex in lookup_matrix:
                         vertex[index] = 0
                     break
-        return top_sort_list
+        return top_sort_list, time_ns() - start
     
     def top_sort_predecessors_list(self):
         top_sort_list = []
         lookup_list = deepcopy(self.splist)
-        for _ in lookup_list:
+        start = time_ns()
+        # for _ in lookup_list:
+        while len(top_sort_list) != self.vertices:
             for index, vertex in enumerate(lookup_list):
                 if len(vertex) == 0 and (index + 1) not in top_sort_list:
                     top_sort_list.append(index + 1)
@@ -91,7 +94,7 @@ class DAG:
                             vertex.remove(index)
                         except ValueError:
                             pass
-        return top_sort_list
+        return top_sort_list, time_ns() - start
             
     def convert_neighbourhood_matrix_into_predecessors_list(self):
         for i, vertex in enumerate(self.matrix):
@@ -134,19 +137,15 @@ for i in range(200, 1001, 200):
 
     dag = DAG(i, 0.6)
     
-    start_pl = time_ns()
-    dag.top_sort_predecessors_list()
-    end_pl = time_ns() - start_pl
-    print(end_pl)
+    _, time_pl = dag.top_sort_predecessors_list()
+    print(time_pl)
 
-    start_nm = time_ns()
-    dag.top_sort_neighbourhood_matrix()
-    end_nm = time_ns() - start_nm
-    print(end_nm)
+    _, time_nm = dag.top_sort_neighbourhood_matrix()
+    print(time_nm)
 
-    outcome.append((i, end_nm, end_pl))
+    outcome.append((i, time_nm, time_pl))
 
-with open("wyniki1.txt", "w") as f:
+with open("wyniki3.txt", "w") as f:
     f.write("count | neighbourhood matrix | predecessors list\n")
     for record in outcome:
         f.write(str(record) + "\n")
