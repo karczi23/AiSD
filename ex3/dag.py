@@ -1,5 +1,5 @@
 from random import randint, choices
-from time import sleep
+from time import time_ns
 from copy import deepcopy
 
 class DAG:
@@ -62,14 +62,17 @@ class DAG:
         # index = self.matrix.index(independent_vertex)
         # top_sort_list.append(index + 1) # we count from 1, not 0
         #     # for elem in vertex:
+
         for _ in lookup_matrix:
             for index, vertex in enumerate(lookup_matrix):
+                if (index + 1) in top_sort_list:
+                    continue
                 candidate = True
                 for elem in vertex:
                     if elem == -1:
                         candidate = False
                         break
-                if candidate and (index + 1) not in top_sort_list:
+                if candidate:
                     top_sort_list.append(index + 1)
                     for vertex in lookup_matrix:
                         vertex[index] = 0
@@ -105,7 +108,45 @@ class DAG:
     def __get_full_saturation_size(self):
         return self.vertices * (self.vertices - 1) / 2
     
-dag = DAG(vertices=100, saturation=0.1)
-print(dag.splist)
-print(dag.top_sort_predecessors_list())
-dag.top_sort_neighbourhood_matrix()
+# dag = DAG(vertices=10, saturation=0.4)
+# for vertex in dag.matrix:
+#     print(vertex)
+# print(dag.top_sort_predecessors_list())
+# dag.top_sort_neighbourhood_matrix()
+
+# from matplotlib import pyplot as plt
+# import networkx as nx
+
+# graph = nx.DiGraph()
+# for index,vertex in enumerate(dag.splist):
+#     for edge in vertex:
+#         graph.add_edge(edge + 1, index + 1)
+
+# plt.tight_layout()
+# nx.draw_networkx(graph, arrows=True)
+# plt.savefig("g1.png", format="PNG")
+# plt.clf()
+
+# print(list(nx.topological_sort(graph)))
+outcome = []
+for i in range(200, 1001, 200):
+    print(i)
+
+    dag = DAG(i, 0.6)
+    
+    start_pl = time_ns()
+    dag.top_sort_predecessors_list()
+    end_pl = time_ns() - start_pl
+    print(end_pl)
+
+    start_nm = time_ns()
+    dag.top_sort_neighbourhood_matrix()
+    end_nm = time_ns() - start_nm
+    print(end_nm)
+
+    outcome.append((i, end_nm, end_pl))
+
+with open("wyniki1.txt", "w") as f:
+    f.write("count | neighbourhood matrix | predecessors list\n")
+    for record in outcome:
+        f.write(str(record) + "\n")
