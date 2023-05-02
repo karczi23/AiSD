@@ -1,4 +1,4 @@
-from random import randint, choices
+from random import sample
 from time import time_ns
 from copy import deepcopy
 
@@ -40,7 +40,7 @@ class DAG:
 
         self.matrix = [[0 for _ in range(self.vertices)] for _ in range(self.vertices)]
 
-        ch = choices(population = self.possible_edges, k = edges)
+        ch = sample(population = self.possible_edges, k = edges)
 
         for item in ch:
             self.matrix[item[0]][item[1]] = 1
