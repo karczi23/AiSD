@@ -2,6 +2,7 @@
 from random import randint, sample
 from copy import deepcopy
 from time import time_ns
+import sys
 
 class Graph:
     # constructor
@@ -239,7 +240,98 @@ class Graph:
         end = time_ns()
         return spanning_tree, end - start
 
+    # Prim algorithm
+    def minimum_spanning_tree_neighbourhood_matrix_prim(self):
+        # Prim's Algorithm in Python
 
+        INF = 1001
+        # number of vertices in graph
+        N = self.vertices
+        selected_node = [0 for _ in range(self.vertices)]
+        spanning_tree = [[0 for _ in range(self.vertices)] for _ in range(self.vertices)]
+        no_edge = 0
+
+        selected_node[0] = True
+        # count = 0
+        # test_time = 0
+        start = time_ns()
+        while (no_edge < N - 1):
+
+            minimum = INF
+            from_vertex = 0
+            to_vertex = 0
+            for m in range(N):
+                if selected_node[m]:
+
+                    # if_start = time_ns()
+                    for n in range(N):
+                        # count += 1
+
+                        if not selected_node[n]:
+                            temp_weight = self.matrix[m][n]
+                            if minimum > temp_weight > 0:
+
+                                minimum = temp_weight
+                                from_vertex = m
+                                to_vertex = n
+                    # test_time += time_ns() - if_start
+
+
+            # print(str(from_vertex) + "-" + str(to_vertex) + ":" + str(self.matrix[from_vertex][to_vertex]))
+            # spanning_tree[from_vertex][to_vertex] = self.matrix[from_vertex][to_vertex]
+            # spanning_tree[to_vertex][from_vertex] = self.matrix[to_vertex][from_vertex]
+            selected_node[to_vertex] = True
+            no_edge += 1
+
+        end = time_ns()
+        # print(test_time, count, test_time / count)
+        return spanning_tree, end - start
+
+    def minimum_spanning_tree_adjacency_list_prim(self):
+        INF = 1001
+        # number of vertices in graph
+        N = self.vertices
+        selected_node = [0 for _ in range(self.vertices)]
+        spanning_tree = [[] for _ in range(self.vertices)]
+        no_edge = 0
+
+        selected_node[0] = True
+        # count = 0
+        # test_time = 0
+        start = time_ns()
+        row_lens = [len(x) for x in self.adjacency_list]
+        while (no_edge < N - 1):
+
+            minimum = INF
+            from_vertex = 0
+            to_vertex = 0
+            for m in range(N):
+                if selected_node[m]:
+                    # if_start = time_ns()
+                    for n in range(row_lens[m]):
+                        # count += 1
+
+                        temp_to = self.adjacency_list[m][n][0]
+                        if not selected_node[temp_to]:
+                            temp_weight = self.adjacency_list[m][n][1]
+                            if minimum > temp_weight:
+
+                                minimum = temp_weight
+                                from_vertex = m
+                                to_vertex = temp_to
+                    # test_time += time_ns() - if_start
+
+
+
+            # print(str(from_vertex) + "-" + str(to_vertex) + ":" + str(minimum))
+            # spanning_tree[from_vertex].append((to_vertex, minimum))
+            # spanning_tree[to_vertex].append((from_vertex, minimum))
+            selected_node[to_vertex] = True
+            no_edge += 1
+
+        end = time_ns()
+        # print(test_time, count, test_time / count)
+        return spanning_tree, end - start
 
     def get_vertices(self):
         return self.vertices
@@ -257,25 +349,56 @@ class Graph:
 # print(*dag.minimum_spanning_tree_adjacency_list(), sep="\n")
 
 sat = [0.3, 0.7]
+repeats = 7
 for s in sat:
-    outcome = []
-    for i in range(200, 1001, 200):
-        print(i)
+    all_outcomes = []
+    for j in range(repeats):
+        outcome = []
+        for i in range(50, 801, 50):
+            print(f"{i} {j+1}/{repeats} {s}")
 
-        graph = Graph(i, s)
-        graph.create_neighbourhood_matrix_with_weights()
+            graph = Graph(i, s)
+            graph.create_neighbourhood_matrix_with_weights()
 
-        _, time_nm = graph.minimum_spanning_tree_neighbourhood_matrix()
-        print(time_nm)
+            # _, time_nm = graph.minimum_spanning_tree_neighbourhood_matrix()
+            # print(time_nm/1000000)
 
-        graph.convert_neighbourhood_matrix_to_adjacency_list()
-        _, time_al = graph.minimum_spanning_tree_adjacency_list()
-        print(time_al)
+            _, time_nmp = graph.minimum_spanning_tree_neighbourhood_matrix_prim()
+            print(time_nmp/1000000)
 
-        outcome.append(f"{i} {time_nm} {time_al}")
+            graph.convert_neighbourhood_matrix_to_adjacency_list()
+            # _, time_al = graph.minimum_spanning_tree_adjacency_list()
+            # print(time_al/1000000)
+
+            _, time_alp = graph.minimum_spanning_tree_adjacency_list_prim()
+            print(time_alp/1000000)
+            # outcome.append([i, time_nm, time_nmp, time_al, time_alp])
+            outcome.append([i, time_nmp, time_alp])
+        all_outcomes.append(outcome)
+
+    average_outcome = [[0 for _ in range(3)] for _ in range(len(all_outcomes[0]))]
+    for i in range(len(all_outcomes[0])):
+        for j in range(len(all_outcomes)):
+            average_outcome[i][1] += all_outcomes[j][i][1]
+            average_outcome[i][2] += all_outcomes[j][i][2]
+            # average_outcome[i][3] += all_outcomes[j][i][3]
+            # average_outcome[i][4] += all_outcomes[j][i][4]
+        average_outcome[i][0] = all_outcomes[0][i][0]
+        average_outcome[i][1] /= repeats
+        average_outcome[i][2] /= repeats
+        # average_outcome[i][3] /= repeats
+        # average_outcome[i][4] /= repeats
+
 
     with open(f"wyniki3_2_{s}.txt", "w") as f:
-        f.write("count neighbourhood matrix adjacency\n")
-        for record in outcome:
-            f.write(str(record) + "\n")
+        f.write("count neighbourhood_matrix adjacency_list\n")
+        for record in average_outcome:
+            f.write(f"{record[0]} {record[1]} {record[2]}\n")
 
+# graph = Graph(10, 0.7)
+# graph.create_neighbourhood_matrix_with_weights()
+# print(*graph.matrix, sep="\n", end="\n\n")
+# print(*graph.minimum_spanning_tree_neighbourhood_matrix_prim()[0], sep="\n")
+# graph.convert_neighbourhood_matrix_to_adjacency_list()
+# print(*graph.adjacency_list, sep="\n", end="\n\n")
+# print(*graph.minimum_spanning_tree_adjacency_list_prim()[0], sep="\n")
