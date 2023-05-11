@@ -16,14 +16,15 @@ class DAG:
         for i in range(self.vertices):
             self.splist.append([])
         # matrix used for top sort testing (correct top sort is 1, 10, 5, 2, 3, 7, 8, 4, 6, 9)
-        self.matrix = [ # tu wstaw macierz
-            [0, 1, 1, 0, 0, 0],
-            [-1, 0, -1, -1, 0, 1],
-            [-1, 1, 0, 1, 0, 1],
-            [0, 1, -1, 0, 1, 1],
-            [0, 0, 0, -1, 0, -1],
-            [0, -1, -1, -1, 1, 0]
-        ]
+        # self.matrix = [ # tu wstaw macierz
+        #     [0, 1, 1, 0, 0, 0],
+        #     [-1, 0, -1, -1, 0, 1],
+        #     [-1, 1, 0, 1, 0, 1],
+        #     [0, 1, -1, 0, 1, 1],
+        #     [0, 0, 0, -1, 0, -1],
+        #     [0, -1, -1, -1, 1, 0]
+        # ]
+        self.matrix = []
         self.possible_edges = []
         # self.create_neighbourhood_matrix()
         # self.convert_neighbourhood_matrix_into_predecessors_list()
@@ -107,7 +108,19 @@ class DAG:
     def __get_full_saturation_size(self):
         return self.vertices * (self.vertices - 1) / 2
 
-dag = DAG(6) # tu zmien argument jako wielkosc tego grafu co podales
+graph_len = int(input("Podaj liczbę krawędzi grafu: "))
+graph_input = []
+print("Podaj macierz sąsiedztwa grafu: ")
+for i in range(graph_len):
+    graph_input.append([int(x) for x in input().split()])
+
+dag = DAG(vertices=graph_len)
+for i in range(graph_len):
+    for j in range(graph_len):
+        if graph_input[i][j] == 1:
+            graph_input[j][i] = -1
+
+dag.matrix = graph_input
 print(dag.top_sort_neighbourhood_matrix()[0])
     
 # dag = DAG(vertices=10, saturation=0.4)
