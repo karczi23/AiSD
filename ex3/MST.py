@@ -415,6 +415,7 @@ for i in range(graph_len):
 graph = Graph(graph_len, 0.5)
 graph.matrix = graph_input
 # print(graph.matrix)
-print(*graph.minimum_spanning_tree_neighbourhood_matrix_prim()[0], sep="\n", end="\n\n")
+print(*graph.minimum_spanning_tree_neighbourhood_matrix_prim()[0], sep="\n", end="\n")
+print(int(sum([sum(x) for x in graph.minimum_spanning_tree_neighbourhood_matrix_prim()[0]])/2), end="\n\n")
 graph.convert_neighbourhood_matrix_to_adjacency_list()
 print(*graph.minimum_spanning_tree_adjacency_list_prim()[0], sep="\n", end="\n\n")
