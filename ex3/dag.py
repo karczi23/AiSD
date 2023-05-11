@@ -11,26 +11,22 @@ class DAG:
             saturation = 1
         self.vertices = int(vertices)
         self.saturation = saturation
-        self.matrix = []
+        # self.matrix = []
         self.splist = []
         for i in range(self.vertices):
             self.splist.append([])
         # matrix used for top sort testing (correct top sort is 1, 10, 5, 2, 3, 7, 8, 4, 6, 9)
-        # self.matrix = [
-        #     [0,1,0,0,0,0,0,0,0,1],
-        #     [-1,0,1,0,-1,0,1,0,0,0],
-        #     [0,-1,0,1,0,0,0,0,0,0],
-        #     [0,0,-1,0,0,1,0,-1,0,0],
-        #     [0,1,0,0,0,0,1,0,0,-1],
-        #     [0,0,0,-1,0,0,-1,-1,1,-1],
-        #     [0,-1,0,0,-1,1,0,1,1,0],
-        #     [0,0,0,1,0,1,-1,0,1,0],
-        #     [0,0,0,0,0,-1,-1,-1,0,0],
-        #     [-1,0,0,0,1,1,0,0,0,0]
-        # ]
+        self.matrix = [ # tu wstaw macierz
+            [0, 1, 1, 0, 0, 0],
+            [-1, 0, -1, -1, 0, 1],
+            [-1, 1, 0, 1, 0, 1],
+            [0, 1, -1, 0, 1, 1],
+            [0, 0, 0, -1, 0, -1],
+            [0, -1, -1, -1, 1, 0]
+        ]
         self.possible_edges = []
-        self.create_neighbourhood_matrix()
-        self.convert_neighbourhood_matrix_into_predecessors_list()
+        # self.create_neighbourhood_matrix()
+        # self.convert_neighbourhood_matrix_into_predecessors_list()
 
     
     def create_neighbourhood_matrix(self) -> list:
@@ -110,6 +106,9 @@ class DAG:
     
     def __get_full_saturation_size(self):
         return self.vertices * (self.vertices - 1) / 2
+
+dag = DAG(6) # tu zmien argument jako wielkosc tego grafu co podales
+print(dag.top_sort_neighbourhood_matrix()[0])
     
 # dag = DAG(vertices=10, saturation=0.4)
 # for vertex in dag.matrix:
@@ -131,21 +130,50 @@ class DAG:
 # plt.clf()
 
 # print(list(nx.topological_sort(graph)))
-outcome = []
-for i in range(200, 1001, 200):
-    print(i)
 
-    dag = DAG(i, 0.6)
-    
-    _, time_pl = dag.top_sort_predecessors_list()
-    print(time_pl)
+# from statistics import mean
 
-    _, time_nm = dag.top_sort_neighbourhood_matrix()
-    print(time_nm)
+# list_outcomes = []
+# for x in range(1):
+#     print(x)
+#     outcome = []
+#     for i in range(200, 3001, 200):
+#         print(i)
 
-    outcome.append((i, time_nm, time_pl))
+#         dag = DAG(i, 0.2)
+        
+#         _, time_pl = dag.top_sort_predecessors_list()
 
-with open("wyniki3.txt", "w") as f:
-    f.write("count | neighbourhood matrix | predecessors list\n")
-    for record in outcome:
-        f.write(str(record) + "\n")
+#         _, time_nm = dag.top_sort_neighbourhood_matrix()
+
+#         outcome.append((i, time_nm, time_pl))
+#     list_outcomes.append(outcome)
+
+# output = []
+# for x in range(15):
+#     tupla = []
+#     for i in range(3):
+#         tupla.append(int(mean([
+#             list_outcomes[0][x][i],
+#             # list_outcomes[1][x][i],
+#             # list_outcomes[2][x][i],
+#             # list_outcomes[3][x][i],
+#             # list_outcomes[4][x][i],
+#             # list_outcomes[5][x][i],
+#             # list_outcomes[6][x][i],
+#             # list_outcomes[7][x][i],
+#             # list_outcomes[8][x][i],
+#             # list_outcomes[9][x][i],
+#             # list_outcomes[10][x][i],
+#             # list_outcomes[11][x][i],
+#             # list_outcomes[12][x][i],
+#             # list_outcomes[13][x][i],
+#             # list_outcomes[14][x][i],
+#         ])))
+#     output.append(tupla)
+
+
+# with open("wynikitestlow.txt", "w") as f:
+#     f.write("count | neighbourhood matrix | predecessors list\n")
+#     for record in output:
+#         f.write(str(record) + "\n")
