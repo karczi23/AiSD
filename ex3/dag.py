@@ -17,16 +17,12 @@ class DAG:
             self.splist.append([])
         # matrix used for top sort testing (correct top sort is 1, 10, 5, 2, 3, 7, 8, 4, 6, 9)
         self.matrix = [ # tu wstaw macierz
-            [0,1,0,0,0,0,0,0,0,1],
-            [-1,0,1,0,-1,0,1,0,0,0],
-            [0,-1,0,1,0,0,0,0,0,0],
-            [0,0,-1,0,0,1,0,-1,0,0],
-            [0,1,0,0,0,0,1,0,0,-1],
-            [0,0,0,-1,0,0,-1,-1,1,-1],
-            [0,-1,0,0,-1,1,0,1,1,0],
-            [0,0,0,1,0,1,-1,0,1,0],
-            [0,0,0,0,0,-1,-1,-1,0,0],
-            [-1,0,0,0,1,1,0,0,0,0]
+            [0, 1, 1, 0, 0, 0],
+            [-1, 0, -1, -1, 0, 1],
+            [-1, 1, 0, 1, 0, 1],
+            [0, 1, -1, 0, 1, 1],
+            [0, 0, 0, -1, 0, -1],
+            [0, -1, -1, -1, 1, 0]
         ]
         self.possible_edges = []
         # self.create_neighbourhood_matrix()
@@ -111,7 +107,7 @@ class DAG:
     def __get_full_saturation_size(self):
         return self.vertices * (self.vertices - 1) / 2
 
-dag = DAG(10) # tu zmien argument jako wielkosc tego grafu co podales
+dag = DAG(6) # tu zmien argument jako wielkosc tego grafu co podales
 print(dag.top_sort_neighbourhood_matrix()[0])
     
 # dag = DAG(vertices=10, saturation=0.4)
