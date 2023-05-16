@@ -37,3 +37,21 @@ This exercise makes us compare different complex data structures.
 <li>removal from memory</li>
 </ul>
 
+# AiSD Ex. 3
+
+First task: Compare the performance of topological sorting for two DAG representations with 60% edge saturation:
+<ul>
+  <li>Adjacency matrix</li>
+  <li>Adjacency list</li>
+</ul>
+
+Second task: Compare the performance of finding Minimum Spanning Tree (MST) with two grah representations:
+<ul>
+  <li>Adjacency matrix</li>
+  <li>Adjacency list</li>
+</ul>
+and for two different edge saturations:
+<ul>
+  <li>30%</li>
+  <li>60%</li>
+</ul>
