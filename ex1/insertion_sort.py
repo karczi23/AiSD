@@ -1,6 +1,6 @@
 from time import time
 from list_gen import gen
-# sortowanie przez wstawianie
+# ex1 przez wstawianie
 # porównanie algorytmów, opisać dlaczego jest jeden szybszy od drugiego
 input_list = gen(1000)
 

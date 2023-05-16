@@ -1,6 +1,6 @@
 from time import time
 from list_gen import gen
-# sortowanie przez wybieranie
+# ex1 przez wybieranie
 
 input_list = gen(10)
 print(input_list)
