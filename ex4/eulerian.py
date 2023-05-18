@@ -29,6 +29,7 @@ class Graph:
             self.adjacency_matrix[nodes[i]][nodes[(i + 1) % self.num_nodes]] = 1
             self.adjacency_matrix[nodes[(i + 1) % self.num_nodes]][nodes[i]] = 1
 
+        # from node 0, add random edges until all nodes in generated cycle have even degree
         beg_node = nodes[0]
         while sum([sum(node) for node in self.adjacency_matrix]) / 2 < self.num_edges:
             connections = [i for i, x in enumerate(self.adjacency_matrix[beg_node])]
@@ -43,6 +44,8 @@ class Graph:
                 self.adjacency_matrix[end_node][beg_node] = 1
                 beg_node = end_node
 
+        # if there are odd nodes, add edges between them if they don't have edge already
+        # or remove edge if they have, so that all nodes have even degree
         for i, node in enumerate(self.adjacency_matrix):
             if sum(node) % 2 == 1:
                 for j in range(i+1, len(node)):
@@ -56,16 +59,21 @@ class Graph:
                             self.adjacency_matrix[j][i] = 0
                             break
 
+        # update number of edges
         self.num_edges = sum([sum(node) for node in self.adjacency_matrix]) // 2
 
     def find_hamilton_cycle(self, vertex=0):
         self.hamilton_cycle.append(vertex)
+        # find all possible neighbours that are not in hamilton cycle
         possible_neighbours = list(set([i for i, x in enumerate(self.adjacency_matrix[vertex]) if x == 1]).difference(self.hamilton_cycle))
         for neighbour in possible_neighbours:
             # return multiple cycles
             self.find_hamilton_cycle(neighbour)
 
-        if len(self.hamilton_cycle) == self.num_nodes and self.hamilton_cycle[0] in [x for x, i in enumerate(self.adjacency_matrix[self.hamilton_cycle[-1]]) if i == 1]:
+        # if all nodes are in hamilton cycle and last node has edge to first node
+        if len(self.hamilton_cycle) == self.num_nodes \
+                and self.hamilton_cycle[0] in \
+                [x for x, i in enumerate(self.adjacency_matrix[self.hamilton_cycle[-1]]) if i == 1]:
             print("cykl znaleziony")
             self.hamilton_cycle.append(self.hamilton_cycle[0])
             for node in self.hamilton_cycle:
@@ -73,6 +81,7 @@ class Graph:
             print(f"{self.hamilton_cycle}")
             self.hamilton_cycle.remove(self.hamilton_cycle[-1])
 
+        # go back one node
         self.hamilton_cycle.remove(vertex)
 
     def find_eulerian_cycle(self):
