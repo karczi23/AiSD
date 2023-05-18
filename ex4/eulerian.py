@@ -29,35 +29,21 @@ class Graph:
             self.adjacency_matrix[nodes[i]][nodes[(i + 1) % self.num_nodes]] = 1
             self.adjacency_matrix[nodes[(i + 1) % self.num_nodes]][nodes[i]] = 1
 
-        # from node 0, add random edges until all nodes in generated cycle have even degree
-        beg_node = nodes[0]
+        # add random triangles
         while sum([sum(node) for node in self.adjacency_matrix]) / 2 < self.num_edges:
-            connections = [i for i, x in enumerate(self.adjacency_matrix[beg_node])]
-            connections.remove(beg_node)
-            end_node = choice(connections)
-            if sum(self.adjacency_matrix[end_node]) % 2 == 1:
-                self.adjacency_matrix[beg_node][end_node] = 1
-                self.adjacency_matrix[end_node][beg_node] = 1
-                beg_node = choice([i for i, node in enumerate(self.adjacency_matrix) if sum(node) < self.num_nodes - 1])
-            else:
-                self.adjacency_matrix[beg_node][end_node] = 1
-                self.adjacency_matrix[end_node][beg_node] = 1
-                beg_node = end_node
+            # choose three random nodes
+            three_nodes = random.sample(range(self.num_nodes), 3)
 
-        # if there are odd nodes, add edges between them if they don't have edge already
-        # or remove edge if they have, so that all nodes have even degree
-        for i, node in enumerate(self.adjacency_matrix):
-            if sum(node) % 2 == 1:
-                for j in range(i+1, len(node)):
-                    if sum(self.adjacency_matrix[j]) % 2 == 1:
-                        if node[j] == 0:
-                            self.adjacency_matrix[i][j] = 1
-                            self.adjacency_matrix[j][i] = 1
-                            break
-                        else:
-                            self.adjacency_matrix[i][j] = 0
-                            self.adjacency_matrix[j][i] = 0
-                            break
+            # if there is no edge any of the two nodes, add edge between them
+            if self.adjacency_matrix[three_nodes[0]][three_nodes[1]] == 0 and \
+                self.adjacency_matrix[three_nodes[0]][three_nodes[2]] == 0 and \
+                self.adjacency_matrix[three_nodes[1]][three_nodes[2]] == 0:
+                self.adjacency_matrix[three_nodes[0]][three_nodes[1]] = 1
+                self.adjacency_matrix[three_nodes[1]][three_nodes[0]] = 1
+                self.adjacency_matrix[three_nodes[0]][three_nodes[2]] = 1
+                self.adjacency_matrix[three_nodes[2]][three_nodes[0]] = 1
+                self.adjacency_matrix[three_nodes[1]][three_nodes[2]] = 1
+                self.adjacency_matrix[three_nodes[2]][three_nodes[1]] = 1
 
         # update number of edges
         self.num_edges = sum([sum(node) for node in self.adjacency_matrix]) // 2
