@@ -5,6 +5,7 @@ from copy import deepcopy
 import networkx as nx
 import matplotlib.pyplot as plt
 
+
 # generate undirected graph
 class Graph:
     def __init__(self, saturation, num_nodes):
@@ -16,6 +17,7 @@ class Graph:
         self.hamilton_cycle = []
         self.euler_cycle = []
         self.num_edges_graph = self.num_edges
+        self.reps = 0
         self.generate_adjacency_matrix()
         self.adjacency_matrix_copy = deepcopy(self.adjacency_matrix)
         self.not_found = True
@@ -35,11 +37,13 @@ class Graph:
         while self.sum_edges < self.num_edges:
             # choose three random nodes
             three_nodes = random.sample(range(self.num_nodes), 3)
-
+            # if generator is stuck, break
+            if self.reps > 1000000:
+                break
             # if there is no edge any of the two nodes, add edge between them
             if self.adjacency_matrix[three_nodes[0]][three_nodes[1]] == 0 and \
-                    self.adjacency_matrix[three_nodes[0]][three_nodes[2]] == 0 and \
-                    self.adjacency_matrix[three_nodes[1]][three_nodes[2]] == 0:
+                self.adjacency_matrix[three_nodes[0]][three_nodes[2]] == 0 and \
+                self.adjacency_matrix[three_nodes[1]][three_nodes[2]] == 0:
                 self.adjacency_matrix[three_nodes[0]][three_nodes[1]] = 1
                 self.adjacency_matrix[three_nodes[1]][three_nodes[0]] = 1
                 self.adjacency_matrix[three_nodes[0]][three_nodes[2]] = 1
@@ -48,6 +52,14 @@ class Graph:
                 self.adjacency_matrix[three_nodes[2]][three_nodes[1]] = 1
                 self.sum_edges += 3
 
+            self.reps += 1
+
+        # if generator was stuck, reset and try again
+        if self.reps > 1000000:
+            self.reps = 0
+            self.adjacency_matrix = [[0 for _ in range(self.num_nodes)] for _ in range(self.num_nodes)]
+            self.generate_adjacency_matrix()
+            return
         self.num_edges = self.sum_edges
 
     def find_hamilton_cycle(self, vertex=0):
@@ -198,7 +210,7 @@ class Graph:
             print(row)
 
 
-step = 2
+step = 1
 saturations = [0.5]
 repeats = 10
 
@@ -206,7 +218,7 @@ for j in saturations:
     average_hamilton_times = []
     for rep in range(repeats):
         hamilton_times = []
-        for i in range(3, 18):
+        for i in range(5, 15):
             hamilton_graph = Graph(j, (i + 1) * step)
 
             start = time_ns()
@@ -225,7 +237,7 @@ for j in saturations:
 
     with open(f"euler-hamilton_{j}.txt", "w") as file:
         for line in average_hamilton_times[0]:
-            file.write(f"{line}\n")
+            file.write(f"{line[0]} {line[1]}\n")
 #
 # graph = Graph(0.5, 10)
 # # graph.print_adjacency_matrix()

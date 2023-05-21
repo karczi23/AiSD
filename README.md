@@ -55,3 +55,18 @@ and for two different edge saturations:
   <li>30%</li>
   <li>60%</li>
 </ul>
+
+# AiSD Ex. 4
+
+First task: Compare the time of finding:
+<ul>
+  <li>Hamilton cycle</li>
+  <li>Euler cycle</li>
+</ul>
+for two different graph saturations:
+<ul>
+  <li>30%</li>
+  <li>70%</li>
+</ul>
+
+Second task: Measure the time of finding all Hamilton cycles in a graph with 50% edge saturation.

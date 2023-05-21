@@ -5,11 +5,13 @@ from copy import deepcopy
 import networkx as nx
 import matplotlib.pyplot as plt
 
+
 # generate undirected graph
 class Graph:
     def __init__(self, saturation, num_nodes):
         self.saturation = saturation
         self.num_nodes = num_nodes
+        self.reps = 0
         self.num_edges = int(self.num_nodes * (self.num_nodes - 1) / 2 * self.saturation)
         self.adjacency_matrix = [[0 for _ in range(self.num_nodes)] for _ in range(self.num_nodes)]
         self.hamilton_cycle = []
@@ -33,10 +35,12 @@ class Graph:
         while self.sum_edges < self.num_edges:
             # choose three random nodes
             three_nodes = random.sample(range(self.num_nodes), 3)
-
+            # if generator is stuck, break
+            if self.reps > 1000000:
+                break
             # if there is no edge any of the two nodes, add edge between them
             if self.adjacency_matrix[three_nodes[0]][three_nodes[1]] == 0 and \
-                self.adjacency_matrix[three_nodes[0]][three_nodes[2]] == 0 and\
+                self.adjacency_matrix[three_nodes[0]][three_nodes[2]] == 0 and \
                 self.adjacency_matrix[three_nodes[1]][three_nodes[2]] == 0:
                 self.adjacency_matrix[three_nodes[0]][three_nodes[1]] = 1
                 self.adjacency_matrix[three_nodes[1]][three_nodes[0]] = 1
@@ -46,6 +50,14 @@ class Graph:
                 self.adjacency_matrix[three_nodes[2]][three_nodes[1]] = 1
                 self.sum_edges += 3
 
+            self.reps += 1
+
+        # if generator was stuck, reset and try again
+        if self.reps > 1000000:
+            self.reps = 0
+            self.adjacency_matrix = [[0 for _ in range(self.num_nodes)] for _ in range(self.num_nodes)]
+            self.generate_adjacency_matrix()
+            return
         self.num_edges = self.sum_edges
 
     def find_hamilton_cycle(self, vertex=0):
@@ -65,6 +77,9 @@ class Graph:
         else:
             self.hamilton_cycle.remove(vertex)
 
+        # if not self.not_found:
+        #     print("it shouldn't work")
+
     def find_eulerian_cycle(self):
         location = 0
         stack = [location]
@@ -81,45 +96,46 @@ class Graph:
                 self.euler_cycle.append(node)
                 location = stack[-1] if stack else 0
 
-
     def print_adjacency_matrix(self):
         for row in self.adjacency_matrix:
             print(row)
 
-step = 2
-saturations = [0.3, 0.7]
+
+step = 1
+saturations = [0.3]
 repeats = 10
 
-
 for j in saturations:
-    # average_euler_times = []
-    # for rep in range(repeats):
-    #     euler_times = []
-    #     for i in range(15):
-    #         euler_graph = Graph(j, (i+1)*step)
-    #
-    #         start = time_ns()
-    #         euler_graph.find_eulerian_cycle()
-    #         end = time_ns()
-    #         print(f"n: {i}, time: {(end - start) / 1000000000} s")
-    #         euler_times.append([(i+1)*step, end - start])
-    #
-    #     average_euler_times.append(euler_times)
-    #
-    # for test in range(len(average_euler_times[0])):
-    #     sum = 0
-    #     for rep in range(repeats):
-    #         sum += average_euler_times[rep][test][1]
-    #     average_euler_times[0][test][1] = sum / repeats
+    average_euler_times = []
+    for rep in range(repeats):
+        print(f"Euler {rep}/{repeats}")
+        euler_times = []
+        for i in range(6, 21):
+            euler_graph = Graph(j, (i+1)*step)
 
-    # with open(f"euler_{j}.txt", "w") as file:
-    #     for line in average_euler_times[0]:
-    #         file.write(f"{line}\n")
+            start = time_ns()
+            euler_graph.find_eulerian_cycle()
+            end = time_ns()
+            print(f"n: {i}, time: {(end - start) / 1000000000} s")
+            euler_times.append([(i+1)*step, end - start])
 
+        average_euler_times.append(euler_times)
+
+    for test in range(len(average_euler_times[0])):
+        sum = 0
+        for rep in range(repeats):
+            sum += average_euler_times[rep][test][1]
+        average_euler_times[0][test][1] = sum / repeats
+
+    with open(f"euler_{j}.txt", "w") as file:
+        for line in average_euler_times[0]:
+            file.write(f"{line[0]} {line[1]}\n")
     average_hamilton_times = []
+
     for rep in range(repeats):
         hamilton_times = []
-        for i in range(3, 18):
+        print(f"Hamilton {rep}/{repeats}")
+        for i in range(6, 21):
             hamilton_graph = Graph(j, (i + 1) * step)
 
             start = time_ns()
@@ -138,7 +154,7 @@ for j in saturations:
 
     with open(f"hamilton_{j}.txt", "w") as file:
         for line in average_hamilton_times[0]:
-            file.write(f"{line}\n")
+            file.write(f"{line[0]} {line[1]}\n")
 
 
 # graph = Graph(0.3, 30)
